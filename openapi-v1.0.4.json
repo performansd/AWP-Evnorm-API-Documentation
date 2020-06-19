@@ -1,0 +1,1003 @@
+{
+  "openapi": "3.0.0",
+  "tags": [
+    {
+      "name": "Güvenlik",
+      "description": "API işlemlerini yapmak için gerekli olan JWT Token almak ve süresi dolmuş bir JWT Token'ın yenilemek için kullanılan metotlar ile iglili bilgileri içermektedir."
+    },
+    {
+      "name": "Hasar Dosyası İşlemleri",
+      "description": "Hasar dosyaları ile iglili işlemleri içermektedir"
+    }
+  ],
+  "info": {
+    "title": "AWP Evnorm",
+    "version": "1.0.4",
+    "contact": {
+      "email": "dev@performans.com",
+      "name": "Performans ",
+      "url": "http://www.performans.com"
+    },
+    "description": "Evnorm Konut Hasar Yönetim Sistemi API kulalnım kılavuzu"
+  },
+  "servers": [
+    {
+      "url": "https://api.evnorm.com/api"
+    }
+  ],
+  "paths": {
+    "/note": {
+      "post": {
+        "summary": "Hasar Dosyasına Not Ekleme",
+        "operationId": "post-note",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                },
+                "examples": {
+                  "Başarılı işlem sonucu": {
+                    "value": {
+                      "success": true,
+                      "statusCode": 200
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "description": "Hasar dosyasına not ve not ile birlikte dosya/resim eklemek için kullanılır",
+        "security": [
+          {
+            "JWT Bearer Authorization": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object"
+              },
+              "examples": {}
+            }
+          },
+          "description": "Form data olarak aşağıdaki parametreler gönderilmelidir\n\n**ownerId**\n> Notun ekleneceği Hasar Dosyası Id'si\n\n**note**\n> Not içeriği\n\n**sendMail**\n> Notun hasar dosyası ilgililerine e-posta ile bildirim gönderilip gönderilmeyeceğini belirtir. \n*true* ise hasar dosyası ilgililerine e-posta ile bildirim gönderilir.\n\n**files**\n> Nota eklenecek dosyalar. Binary dosyalar eklenmelidir. Sadece ***.jpg, .png, .jpeg, .pdf, .docx ve .xlsx*** uzantılı dosyalara izin verilir. Bunun dışındaki dosyaların gönderilmesi durumunda gönderilen dosyalar gözarde edilir ve kaydedilmez.\n\n\n\n\n"
+        },
+        "parameters": [],
+        "tags": [
+          "Hasar Dosyası İşlemleri"
+        ]
+      },
+      "parameters": []
+    },
+    "/df/review-report": {
+      "parameters": [],
+      "post": {
+        "summary": "Fizibilite/Onarım Raporu Onaylama/Reddetme",
+        "operationId": "post-df-review-report",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResult"
+                },
+                "examples": {
+                  "Uygunsuz Talep": {
+                    "value": {
+                      "success": false,
+                      "message": "Bu dosya fizibilite raporu onayına uygun değildir",
+                      "statusCode": 400
+                    }
+                  },
+                  "Yetki Hatası": {
+                    "value": {
+                      "success": false,
+                      "message": "Bu işlemi yapmaya yetkiniz bulunmuyor",
+                      "statusCode": 403
+                    }
+                  },
+                  "Başarılı İşlem Sonucu": {
+                    "value": {
+                      "success": true,
+                      "statusCode": 200
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "description": "Fizibilite ya da onarım raporunda yer alan maddeleri onaylamak ya da reddetmek için kullanılır",
+        "security": [
+          {
+            "JWT Bearer Authorization": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Raporun bağlı olduğu hasar dosyası anahtarı [id]"
+                  },
+                  "reportType": {
+                    "type": "integer",
+                    "description": "İlgili rapor tipi. Fizibilite Raporu: 1, Onarım Raporu: 2"
+                  },
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "description": "İşleme tabi rapor maddedsinin idsi"
+                        },
+                        "approved": {
+                          "type": "boolean",
+                          "description": "Onaylanıp onaylanmadığı. true ise onaylanır, false ise reddedlir "
+                        },
+                        "message": {
+                          "type": "string",
+                          "description": "Red nedeni"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "examples": {
+                "Örnek 1": {
+                  "value": {
+                    "id": "9b10648e-85e3-4814-8bd9-f36ff3cb01b8",
+                    "reportType": 1,
+                    "items": [
+                      {
+                        "id": "2db52ca3-c911-4e6f-98ec-830d168193c0",
+                        "approved": true
+                      },
+                      {
+                        "id": "110a448e-feb4-4671-bd13-65f68cf93a6e",
+                        "approved": false,
+                        "message": "Yapılmasına gerek yok"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "description": ""
+        },
+        "tags": [
+          "Hasar Dosyası İşlemleri"
+        ]
+      }
+    },
+    "/token/refresh/{refreshToken}": {
+      "parameters": [
+        {
+          "schema": {
+            "type": "string"
+          },
+          "name": "refreshToken",
+          "in": "path",
+          "required": true
+        }
+      ],
+      "get": {
+        "summary": "JWT Token Yenileme",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignInResult"
+                },
+                "examples": {
+                  "Başarılı İşlem Sonucu": {
+                    "value": {
+                      "data": {
+                        "accessToken": "eyJhbGciOiJIUzUxMiIsIn9J...",
+                        "tokenType": "Bearer",
+                        "expiresIn": 172800,
+                        "refreshToken": "ZxuRloArVRhNoq9w..."
+                      },
+                      "success": true,
+                      "type": "success",
+                      "statusCode": 200
+                    }
+                  },
+                  "Başarısız İşlem Sonucu": {
+                    "value": {
+                      "success": false,
+                      "message": "Invalid login credentials",
+                      "statusCode": 400
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-token-refresh-refreshToken",
+        "description": "Zaman aşımına uğrayan bir JWT Bearer Token'ın yenilemek için kullanılır",
+        "tags": [
+          "Güvenlik"
+        ]
+      }
+    },
+    "/signin": {
+      "post": {
+        "summary": "JWT Token Alma",
+        "operationId": "post-signin",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignInResult"
+                },
+                "examples": {
+                  "Başarılı İşlem Sonucu": {
+                    "value": {
+                      "data": {
+                        "accessToken": "eyJhbGciOiJIUzUxMiIsIn9J...",
+                        "tokenType": "Bearer",
+                        "expiresIn": 172800,
+                        "refreshToken": "ZxuRloArVRhNoq9w..."
+                      },
+                      "success": true,
+                      "type": "success",
+                      "statusCode": 200
+                    }
+                  },
+                  "Başarısız İşlem Sonucu": {
+                    "value": {
+                      "success": false,
+                      "message": "Invalid login credentials",
+                      "statusCode": 400
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "description": "API erişimlerinde kullanılmak üzere gerekli olan JWT Bearer Token almak için kullanılır. Evnorm kullanıcı adı ve şifre parametreleri gönderilerek kullanıcı için token oluşturularak gönderilir.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignInRequest"
+              },
+              "examples": {
+                "Örnek 1": {
+                  "value": {
+                    "username": "api-user",
+                    "password": "api-user-password"
+                  }
+                }
+              }
+            }
+          },
+          "description": ""
+        },
+        "tags": [
+          "Güvenlik"
+        ]
+      }
+    },
+    "/df/mh-set-status": {
+      "post": {
+        "summary": "Muallak Hasar Onaylama / Reddetme",
+        "operationId": "post-df-mh-set-status",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResult"
+                },
+                "examples": {
+                  "Başarılı İşlem Sonucu": {
+                    "value": {
+                      "success": true,
+                      "type": "success",
+                      "statusCode": 200
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Acceptable\nBelirtilen dosya numarası ile kayıtlı bir dosya bulunmuyor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResult"
+                },
+                "examples": {
+                  "Örnek ": {
+                    "value": {
+                      "message": "Dosya bulunamadı",
+                      "success": false,
+                      "statusCode": 404
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "Not Acceptable\nDosya durumu bu işleme uygun değil. Dosya kapalı ya da muallak hasar aşamasından geçmiş olabilir.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResult"
+                },
+                "examples": {
+                  "Örnek": {
+                    "value": {
+                      "message": "Dosya durumu bu işleme uygun değil",
+                      "success": false,
+                      "statusCode": 406
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "417": {
+            "description": "Expectation Failed\n{islem} parametresinde geçersiz işlem tipi gönderilmiş. ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResult"
+                },
+                "examples": {
+                  "Örnek": {
+                    "value": {
+                      "message": "Geçersiz işlem tipi. İlem tipi Onay için 1, Red için -1 değerinde olmalıdır.",
+                      "success": false,
+                      "statusCode": 406
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "description": "Uzman tarafından fizibilite öncesinde oluşturulan Muallak Hasar kaydının onay ya da reddedilmesi için kullanılır. ",
+        "security": [
+          {
+            "JWT Bearer Authorization": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "dosyaNo": {
+                    "type": "string",
+                    "description": "Dosya numarası",
+                    "example": "99900001",
+                    "maxLength": 50
+                  },
+                  "islem": {
+                    "type": "integer",
+                    "description": "İşlem tipi\n\nOnay : 1\nRed  : -1",
+                    "enum": [
+                      1,
+                      -1
+                    ],
+                    "format": "int32",
+                    "example": 1
+                  },
+                  "aciklama": {
+                    "type": "string",
+                    "description": "İşlem açıklaması",
+                    "maxLength": 500,
+                    "example": "Tutar çok fazla"
+                  }
+                },
+                "required": [
+                  "dosyaNo",
+                  "islem"
+                ]
+              },
+              "examples": {
+                "Onaylama": {
+                  "value": {
+                    "dosyaNo": "2020120134375",
+                    "islem": 1
+                  }
+                },
+                "Reddetme": {
+                  "value": {
+                    "dosyaNo": "2020120134375",
+                    "islem": -1,
+                    "aciklama": "Hasar tutarı çok yüksek"
+                  }
+                }
+              }
+            }
+          },
+          "description": ""
+        },
+        "tags": [
+          "Hasar Dosyası İşlemleri"
+        ]
+      }
+    },
+    "/df/create-update": {
+      "post": {
+        "summary": "Hasar Dosyası Oluşturma/Güncelleme",
+        "operationId": "post-df-create-update",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResult"
+                },
+                "examples": {
+                  "Örnek": {
+                    "value": {
+                      "success": true,
+                      "statusCode": 200
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResult"
+                },
+                "examples": {
+                  "Örnek": {
+                    "value": {
+                      "success": false,
+                      "statusCode": 400,
+                      "message": "Invalid request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "Not Acceptable\nGönderilen verinin validasyonlardan geçememesi halinde 406 cevabu verilir. Cavap içerisinde hatalar ile ilgili detaylı bilgi yer almaktadır.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResult"
+                },
+                "examples": {
+                  "Örnek": {
+                    "value": {
+                      "errors": {
+                        "PoliceTipi": [
+                          "Belirtilen id ile tanımlı bir PoliceTipi bulunamadı. Geçerli değerler: 14 : Cam / Bireysel, 15 : Cam / Ticari, 16 : Eczane Paket, 17 : Klasik Yangın / Sınai, 18 : Klasik Yangın / Sivil, 19 : Klasik Yangın / Ticari, 20 : Optimum Ev, 21 : Otel Paket, 22 : Site / Apartman Yönetimi, 23 : Süper Ev, 24 : Tüm Ev, 25 : Tüm İşyeri / Sınai, 26 : Tüm İşyeri/Ticari "
+                        ],
+                        "HasarTarihi": [
+                          "HasarTarihi HasarIhbarTarihi = 08.06.2020 değerinden önce olamaz",
+                          "HasarTarihi PoliceBaslangicTarihi = 16.06.2020 ve PoliceBitisTarihi = 16.06.2021 aralığında omalıdır"
+                        ]
+                      },
+                      "success": false,
+                      "message": "Request has errors",
+                      "statusCode": 400
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "description": "Evnorm sistemine yeni dosya oluşturmak ya da var olan dosya bilgilerini güncellemek için kullanılır.",
+        "security": [
+          {
+            "JWT Bearer Authorization": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HasarDosyasi"
+              },
+              "examples": {
+                "Örnek Talep": {
+                  "value": {
+                    "dosyaNo": "99900001",
+                    "policeNo": "200200025120580",
+                    "policeTipi": 23,
+                    "policeGrubu": 1,
+                    "policeBaslangicTarihi": "2020-04-12",
+                    "policeBitisTarihi": "2021-04-12",
+                    "sigortaliTipi": 2,
+                    "sigortaliYetkiliAdiSoyadi": "Mehmet Yıldırım",
+                    "sigortaliTcKimlikNo": "55544466677",
+                    "sigortaliFirmaUnvani": "AGA Servis Hizmetleri A.Ş.",
+                    "sigortaliVergiDairesi": "MECİDİYEKÖY",
+                    "sigortaliVergiNo": "7280281299",
+                    "sigortaliKiracimi": true,
+                    "sigortaliGsm": "5556667788",
+                    "sigortaliTel1": "2122919816",
+                    "sigortaliTel2": "2122485078",
+                    "acenteUnvani": "ALP-ER SİGORTA ARACILIK HİZ. LTD. ŞTİ.",
+                    "acenteYetklisi": "Taner Koca",
+                    "acenteTel": "8505320548",
+                    "hasarTarihi": "2020-06-05",
+                    "hasarIhbarTarihi": "2020-06-08",
+                    "binaTipi": 1,
+                    "hasarNedeni": 19,
+                    "hasarTanimi": "Banyo duvarında su sızıntısı var",
+                    "hasarAdresiIl": "İSTANBUL",
+                    "hasarAdresiIlce": "ŞİŞLİ",
+                    "hasarAdresiSemt": "MECİDİYEKÖY",
+                    "hasarAdresiMahalle": "KUŞTEPE MAH.",
+                    "hasarAdresiSokak": "Mehmetçik Cd. No:34",
+                    "irtibatKisiAdSoyad": "Mehmet Yıldırım",
+                    "irtibatKisiGsm": "5557778899",
+                    "irtibatKisiTel1": "2122919816",
+                    "irtibatKisiTel2": "2122485078"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Hasar Dosyası İşlemleri"
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "SignInRequest": {
+        "title": "SignInRequest",
+        "type": "object",
+        "x-examples": {
+          "example-1": {
+            "username": "api-user",
+            "password": "api-user-password"
+          }
+        },
+        "properties": {
+          "username": {
+            "type": "string",
+            "description": "Evnorm kullanıcı adı / e-posta adresi"
+          },
+          "password": {
+            "type": "string",
+            "description": "Evnorm kullanıcı şifresi"
+          }
+        },
+        "required": [
+          "username",
+          "password"
+        ],
+        "description": "/signin metoduna gönderilecek veri tipidir"
+      },
+      "ApiResult": {
+        "title": "ApiResult",
+        "type": "object",
+        "x-examples": {
+          "Başarılı İşlem Sonucu": {
+            "success": true,
+            "statusCode": 200,
+            "message": "İşlem tamamlandı"
+          },
+          "Başarısız İşlem Sonucu - NotFound - 404": {
+            "success": false,
+            "statusCode": 404,
+            "message": "aradığınız kaynak bulunamadı"
+          },
+          "Başarısız İşlem Sonucu - Error - 500": {
+            "success": false,
+            "statusCode": 500,
+            "message": "İşlem sırasında beklenmedik bir hata oluştu"
+          },
+          "Validasyon Hatası - 406": {
+            "errors": {
+              "PoliceTipi": [
+                "Belirtilen id ile tanımlı bir PoliceTipi bulunamadı. Geçerli değerler: 14 : Cam / Bireysel, 15 : Cam / Ticari, 16 : Eczane Paket, 17 : Klasik Yangın / Sınai, 18 : Klasik Yangın / Sivil, 19 : Klasik Yangın / Ticari, 20 : Optimum Ev, 21 : Otel Paket, 22 : Site / Apartman Yönetimi, 23 : Süper Ev, 24 : Tüm Ev, 25 : Tüm İşyeri / Sınai, 26 : Tüm İşyeri/Ticari "
+              ],
+              "HasarTarihi": [
+                "HasarTarihi HasarIhbarTarihi = 08.06.2020 değerinden önce olamaz",
+                "HasarTarihi PoliceBaslangicTarihi = 16.06.2020 ve PoliceBitisTarihi = 16.06.2021 aralığında omalıdır"
+              ]
+            },
+            "success": false,
+            "message": "Request has errors",
+            "statusCode": 400
+          },
+          "Başarısız İşlem - BadRequest - 400": {
+            "success": false,
+            "statusCode": 400,
+            "message": "Invalid request"
+          }
+        },
+        "description": "Tüm API metotlarında işlem sonucu olarak gönderilen jenerik sonuç nesnesidir",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "İşlem sonucunun başarılı olup olmadığını belirtir"
+          },
+          "message": {
+            "type": "string",
+            "description": "İşlem sonucunda bir hata oluşmuş ise hata mesajı ya da başka bir mesaj verilmesi gerekiyor ise burada belirtilir. "
+          },
+          "statusCode": {
+            "type": "integer",
+            "description": "İşlem durum kodunu belirtir. Başarılı işlemlerde 200 cevabı gelecektir."
+          },
+          "data": {
+            "description": "İşlem sonucunda ek veri gönderilmesi gerekiyor ise data özelliğinde gönderilir",
+            "type": "object"
+          },
+          "errors": {
+            "type": "object",
+            "description": "Validasyon hatalarına ait detaylı bilgi içeris Dictionary<string, string[]> tipindedir"
+          }
+        },
+        "required": [
+          "success",
+          "message",
+          "statusCode"
+        ]
+      },
+      "SignInResult": {
+        "title": "SignInResult",
+        "type": "object",
+        "description": "/signin metodundan geri dönen veri tipidir",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "İşlem sonucunun başarılı olup olmadığını belirtir"
+          },
+          "message": {
+            "type": "string",
+            "description": "İşlem sonucunda bir hata oluşmuş ise hata mesajı ya da başka bir mesaj verilmesi gerekiyor ise burada belirtilir. "
+          },
+          "statusCode": {
+            "type": "integer",
+            "description": "İşlem durum kodunu belirtir. Başarılı işlemlerde 200 cevabı gelecektir."
+          },
+          "data": {
+            "description": "İşlem sonucunda ek veri gönderilmesi gerekiyor ise data özelliğinde gönderilir",
+            "type": "object",
+            "required": [
+              "accessToken",
+              "tokenType",
+              "expiresIn",
+              "refreshToken"
+            ],
+            "properties": {
+              "accessToken": {
+                "type": "string",
+                "description": "JWT Bearer Token"
+              },
+              "tokenType": {
+                "type": "string",
+                "description": "Token tipi \"Bearer\""
+              },
+              "expiresIn": {
+                "type": "integer",
+                "description": "Token zaman aşımı süresi (saniye cinsinden)"
+              },
+              "refreshToken": {
+                "type": "string",
+                "description": "Zaman aşımına uğramış bir JWT Bearer Token'ı yenilemek için kullanılarak yenileme Token'ı"
+              }
+            }
+          }
+        },
+        "x-examples": {
+          "Başarılı İşlem Sonucu": {
+            "data": {
+              "accessToken": "eyJhbGciOiJIUzUxMiIsIn9J...",
+              "tokenType": "Bearer",
+              "expiresIn": 172800,
+              "refreshToken": "ZxuRloArVRhNoq9w..."
+            },
+            "success": true,
+            "type": "success",
+            "statusCode": 200
+          },
+          "Başarısız İşlem Sonucu": {
+            "success": false,
+            "message": "Invalid login credentials",
+            "statusCode": 400
+          }
+        }
+      },
+      "HasarDosyasi": {
+        "title": "Hasar Dosyası",
+        "type": "object",
+        "description": "Hasar dosyası oluşturma ya da güncellemede kullanılan veri modelidir",
+        "x-tags": [
+          "Hasar Dosyası İşlemleri"
+        ],
+        "properties": {
+          "dosyaNo": {
+            "type": "string",
+            "example": "2020120134375",
+            "maxLength": 50,
+            "description": "Hasar dosyası numarası"
+          },
+          "policeNo": {
+            "type": "string",
+            "example": "200200025120580",
+            "maxLength": 50,
+            "description": "Poliçe No"
+          },
+          "policeTipi": {
+            "type": "integer",
+            "description": "Poliçe tipi kodudur. Sigorta şirketine göre değişiklik gösterebilir. ",
+            "format": "int32",
+            "example": 33
+          },
+          "policeGrubu": {
+            "type": "integer",
+            "description": "Poliçe Grubu\n\n1 : Sivil\n2 : Ticari\n3 : Sınai",
+            "enum": [
+              1,
+              2,
+              3
+            ],
+            "format": "int32",
+            "example": 1,
+            "minimum": 1,
+            "maximum": 3
+          },
+          "policeBaslangicTarihi": {
+            "type": "string",
+            "description": "Poliçe Başlangıç Tarihi: 'yyyy-MM-dd' şeklinde ISODATE formatında olmalıdır. Poliçe başlangıç tarihi bugünden sonra olamaz\n\n",
+            "format": "date",
+            "example": "2020-06-16"
+          },
+          "policeBitisTarihi": {
+            "type": "string",
+            "format": "date",
+            "example": "2021-06-16",
+            "description": "Poliçe Bitiş Tarihi: 'yyyy-MM-dd' şeklinde ISODATE formatında olmalıdır. Poliçe bitiş tarihi poliçe başlangıç tarihinden sonra olmalıdır"
+          },
+          "sigortaliTipi": {
+            "type": "integer",
+            "description": "Sigortali Tipi: Şahıs: 1, Tüzel: 2 olabilir.",
+            "format": "int32",
+            "example": 2,
+            "minimum": 1,
+            "maximum": 2,
+            "enum": [
+              1,
+              2
+            ]
+          },
+          "sigortaliYetkiliAdiSoyadi": {
+            "type": "string",
+            "description": "Sigortalı tipi \"şahıs\" olan poliçelerde Sigortalı Adı, \"tüzel\" olan poliçelerde ise firma adına yetkili kişinin adı soyadıdır.",
+            "example": "Mehmet Yıldırım",
+            "maxLength": 50
+          },
+          "sigortaliTcKimlikNo": {
+            "type": "string",
+            "description": "Sigortalı tipi \"şahıs\" olan poliçelerde girilmesi zorunlu olup sigortalının Türk vatandaşları için T.C. Kimlik Numarası, yabancı uyruklular için ise pasaport numarası belirtilmelidir.",
+            "example": "55544466677",
+            "maxLength": 20
+          },
+          "sigortaliFirmaUnvani": {
+            "type": "string",
+            "example": "AGA Servis Hizmetleri A.Ş.",
+            "maxLength": 255,
+            "description": "Sigortalı tipi \"tüzel\" olan poliçelerde girilmesi zorunlu olup poliçe sahibi firmanın adı belirtilmelidir."
+          },
+          "sigortaliVergiDairesi": {
+            "type": "string",
+            "example": "MECİDİYEKÖY",
+            "maxLength": 20,
+            "description": "Sigortalı tipi \"tüzel\" olan poliçelerde girilmesi zorunlu olup poliçe sahibi firmanın vergi dairesi belirtilmelidir"
+          },
+          "sigortaliVergiNo": {
+            "type": "string",
+            "description": "Sigortalı tipi \"tüzel\" olan poliçelerde girilmesi zorunlu olup poliçe sahibi firmanın vergi numarası belirtilmelidir",
+            "example": "7280281299",
+            "maxLength": 20
+          },
+          "sigortaliKiracimi": {
+            "type": "boolean",
+            "example": true,
+            "description": "Sigortalı kiracı ise true mülk sahibi ise false gönderilir."
+          },
+          "sigortaliGsm": {
+            "type": "string",
+            "description": "Sigortalıya erişilebilmesi ve sistem tarafından bildirimlerin sms olarak gönderileceği cep telefonu numarasıdır. Telefon numarası 5556667788 formatında başında sıfır olmadan, 10 haneli ve sadece rakamlardan oluşmalıdır. Farklı formatlarda girilmesi halinde SMS bildirimleri sigortalıya ulaşmayabilir.",
+            "example": "5556667788",
+            "maxLength": 20
+          },
+          "sigortaliTel1": {
+            "type": "string",
+            "description": "Sigortalıya ait ev iş ya da diğer telefon numarası. Telefon numarası 2126667788 formatında başında sıfır olmadan, 10 haneli ve sadece rakamlardan oluşmalıdır.",
+            "example": "2122919816",
+            "maxLength": 20
+          },
+          "sigortaliTel2": {
+            "type": "string",
+            "description": "Sigortalıya ait ev iş ya da diğer telefon numarası. Telefon numarası 2126667788 formatında başında sıfır olmadan, 10 haneli ve sadece rakamlardan oluşmalıdır.",
+            "example": "2122485078",
+            "maxLength": 20
+          },
+          "acenteUnvani": {
+            "type": "string",
+            "description": "Poliçeyi yapan sigorta acentesi unvanı",
+            "example": "ALP-ER SİGORTA ARACILIK HİZ. LTD. ŞTİ.",
+            "maxLength": 255
+          },
+          "acenteYetklisi": {
+            "type": "string",
+            "description": "Poliçeyi yapan sigorta acentesi yetkilisi adı soyadı",
+            "example": "Taner Koca",
+            "maxLength": 100
+          },
+          "acenteTel": {
+            "type": "string",
+            "example": "8505320548",
+            "maxLength": 100,
+            "description": "Poliçeyi yapan sigorta acentesi rtibat telefon numarası. "
+          },
+          "hasarTarihi": {
+            "type": "string",
+            "description": "Hasarın oluştuğu tarihidir. 'yyyy-MM-dd' şeklinde ISO DATE formatında olmalıdır",
+            "format": "date",
+            "example": "2020-06-05"
+          },
+          "hasarIhbarTarihi": {
+            "type": "string",
+            "description": "Hasarın sigortalı tarafından bildirildiği tarihitir.  'yyyy-MM-dd' şeklinde ISO DATE formatında olmalıdır",
+            "format": "date",
+            "example": "2020-06-08"
+          },
+          "binaTipi": {
+            "type": "integer",
+            "description": "Hasarın meydana geldiği bina tipi.\n\n1: Betonarme,\n2: Tam kagir,\n3: Yarım kagir,\n4: Ahşap,\n5: Çelik,\n6: Diğer",
+            "enum": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "example": 1,
+            "minimum": 1,
+            "maximum": 6
+          },
+          "hasarNedeni": {
+            "type": "integer",
+            "description": "Hasarın oluşma nedeni. Aşağıdaki değerlerden birisini alabilir\n\n19 : Cam Kırılması / Cam Kırılması,\n20 : Cam Kırılması / Dolu,\n21 : Cam Kırılması / Hareketli Cam,\n22 : Cam Kırılması / Sabit Cam,\n23 : Dahili Su / Açık Bırakılan Musluk,\n24 : Dahili Su / Akvaryum Su Sızması,\n25 : Dahili Su / Baca Açıkları,\n26 : Dahili Su / Drenaj,\n27 : Dahili Su / Geri Tepme,\n28 : Dahili Su / Isı Farklılığı,\n29 : Dahili Su / İç İzolasyon Eksikliği,\n30 : Dahili Su / İzolasyon Hatası,\n31 : Dahili Su / Komşudan Sızıntı,\n32 : Dahili Su / Tesisat Açma/Kapama,\n33 : Dahili Su / Tesisat Sızıntısı,\n34 : Dahili Su / Yağmur,\n35 : Duman / Duman,\n36 : Fırtına / Fırtına,\n37 : Hırsızlık / Ademi Teslim,\n38 : Hırsızlık / Akvaryum Su Sızması,\n39 : Hırsızlık / Aşırma,\n40 : Hırsızlık / Bina Sabit Kıymet Hırsızlık,\n41 : Hırsızlık / Emniyeti Suistimal,\n42 : Hırsızlık / Gasp, Kapkaç,\n43 : Hırsızlık / Hırsızlığa Teşebbüs,\n44 : Hırsızlık / Hırsızlık,\n45 : Hırsızlık / Hırsızlık 3. Şahıs Emtea,\n46 : Hırsızlık / Hırsızlık, Çalınma,\n47 : Hırsızlık / Kısmi Çalınma,\n48 : Hırsızlık / Tamamen Çalınma,\n49 : İnfilak / 3.Şahsa Verilen Zarar,\n50 : İnfilak / Akvaryum Su Sızması,\n51 : İnfilak / Doğalgaz Sıkışması,\n52 : İnfilak / Fiziki İnfilak,\n53 : İnfilak / Kazan Patlaması,\n54 : İnfilak / Televizyon Patlaması,\n55 : İnfilak / Tüp Patlaması,\n56 : Kar Ağırlığı / Akvaryum Su Sızması,\n57 : Kar Ağırlığı / Kar Ağırlığı,\n58 : Sel Su Baskını / Aşırı Yağış,\n59 : Sel Su Baskını / Deniz Kabarması,\n60 : Sel Su Baskını / Dere Taşması,\n61 : Sel Su Baskını / Geri Tepme,\n62 : Sel Su Baskını / Sel Su Baskını,\n63 : Sel Su Baskını / Seylap,\n64 : Sel Su Baskını / Yağmur,\n65 : Sel Su Baskını / Yer Altı Suyu,\n66 : Terör / Depo,\n67 : Terör / Gemi,\n68 : Terör / Kamyon,\n69 : Terör / Terör,\n70 : Terör / Treyler,\n71 : Terör / Uçak,\n72 : Terör / Vagon,\n73 : Yangın / Akvaryum Su Sızması,\n74 : Yangın / Ateş Sıçraması,\n75 : Yangın / Elektrik Kontağı,\n76 : Yangın / Kaynak Sonucu,\n77 : Yangın / Makina Yangın,\n78 : Yangın / Yangın",
+            "format": "int32",
+            "example": 19,
+            "minimum": 19,
+            "maximum": 78
+          },
+          "hasarTanimi": {
+            "type": "string",
+            "description": "Hasarın tanımı belirtilmelidir.",
+            "example": "Banyo duvarında su sızıntısı var",
+            "maxLength": 4000
+          },
+          "hasarAdresiIl": {
+            "type": "string",
+            "description": "Hasarın oluştuğu adres İL",
+            "example": "İSTANBUL",
+            "maxLength": 50
+          },
+          "hasarAdresiIlce": {
+            "type": "string",
+            "description": "Hasarın oluştuğu adres İLÇE",
+            "example": "ŞİŞLİ",
+            "maxLength": 50
+          },
+          "hasarAdresiSemt": {
+            "type": "string",
+            "description": "Hasarın oluştuğu adres SEMT, bilinmiyor ise ilçe ile aynı değer gönderilebilir",
+            "example": "MECİDİYEKÖY",
+            "maxLength": 50
+          },
+          "hasarAdresiMahalle": {
+            "type": "string",
+            "example": "KUŞTEPE MAH.",
+            "maxLength": 50,
+            "description": "Hasarın oluştuğu adres MAHALLE"
+          },
+          "hasarAdresiSokak": {
+            "type": "string",
+            "example": "Mehmetçik Cd. No:34",
+            "maxLength": 255,
+            "description": "Hasarın oluştuğu adres CAdde, Sokak, bina numarası kat site adı vb."
+          },
+          "irtibatKisiAdSoyad": {
+            "type": "string",
+            "description": "Hasar dosyası ile iglili irtibat kurulacak kişinin adı soyadı. Sigortalı ile aynı olabilir.",
+            "example": "Mehmet Yıldırım",
+            "maxLength": 50
+          },
+          "irtibatKisiGsm": {
+            "type": "string",
+            "description": "Hasar dosyası ile iglili irtibat kurulacak kişinin cep telefonu numarası. Sigortalı ile aynı olabilir. Telefon numarası 5556667788 formatında başında sıfır olmadan, 10 haneli ve sadece rakamlardan oluşmalıdır. Farklı bir formatta gönderilmesi durumunda sistemden gönderilen SMS bildirimleri ulaşmayabilir.",
+            "example": "5557778899",
+            "maxLength": 20
+          },
+          "irtibatKisiTel1": {
+            "type": "string",
+            "description": "Hasar dosyası ile iglili irtibat kurulacak kişiye ait ev iş ya da diğer telefon numarası. Telefon numarası 2126667788 formatında başında sıfır olmadan, 10 haneli ve sadece rakamlardan oluşmalıdır.",
+            "maxLength": 20,
+            "example": "2122919816"
+          },
+          "irtibatKisiTel2": {
+            "type": "string",
+            "maxLength": 20,
+            "description": "Hasar dosyası ile iglili irtibat kurulacak kişiye ait ev iş ya da diğer telefon numarası. Telefon numarası 2126667788 formatında başında sıfır olmadan, 10 haneli ve sadece rakamlardan oluşmalıdır.",
+            "example": "2122485078"
+          }
+        },
+        "required": [
+          "dosyaNo",
+          "policeNo",
+          "policeTipi",
+          "policeGrubu",
+          "policeBaslangicTarihi",
+          "policeBitisTarihi",
+          "sigortaliTipi",
+          "sigortaliYetkiliAdiSoyadi",
+          "sigortaliKiracimi",
+          "sigortaliGsm",
+          "hasarTarihi",
+          "hasarIhbarTarihi",
+          "binaTipi",
+          "hasarNedeni",
+          "hasarTanimi",
+          "hasarAdresiIl",
+          "hasarAdresiIlce",
+          "hasarAdresiSemt",
+          "hasarAdresiMahalle",
+          "hasarAdresiSokak",
+          "irtibatKisiAdSoyad",
+          "irtibatKisiGsm"
+        ]
+      }
+    },
+    "securitySchemes": {
+      "JWT Bearer Authorization": {
+        "type": "http",
+        "scheme": "Bearer"
+      }
+    }
+  }
+}
