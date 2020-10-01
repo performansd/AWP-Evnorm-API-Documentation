@@ -12,7 +12,7 @@
   ],
   "info": {
     "title": "AWP Evnorm",
-    "version": "1.0.4",
+    "version": "1.0.5",
     "contact": {
       "email": "dev@performans.com",
       "name": "Performans ",
@@ -668,7 +668,10 @@
           },
           "description": ""
         },
-        "description": "Bir hasar dosyasına ait hizmet kalitesi değerlendirmesini kaydetmek için kullanılan metottur."
+        "description": "Bir hasar dosyasına ait hizmet kalitesi değerlendirmesini kaydetmek için kullanılan metottur.",
+        "tags": [
+          "Hasar Dosyası İşlemleri"
+        ]
       }
     },
     "/df/set-client-is-repair-completed": {
@@ -753,7 +756,10 @@
             }
           },
           "description": ""
-        }
+        },
+        "tags": [
+          "Hasar Dosyası İşlemleri"
+        ]
       }
     },
     "/df/set-supplier-was-late-for-appointment": {
@@ -854,7 +860,10 @@
             "JWT Bearer Authorization": []
           }
         ],
-        "description": "Tedarikçinin Fizibilite ya da Onarım randevusuna gecikmesi durumunda Evnorm'a bu bilginin kaydedilmesi için kullanılır. "
+        "description": "Tedarikçinin Fizibilite ya da Onarım randevusuna gecikmesi durumunda Evnorm'a bu bilginin kaydedilmesi için kullanılır. ",
+        "tags": [
+          "Hasar Dosyası İşlemleri"
+        ]
       }
     },
     "/df/set-appointment-date": {
@@ -965,6 +974,9 @@
           {
             "JWT Bearer Authorization": []
           }
+        ],
+        "tags": [
+          "Hasar Dosyası İşlemleri"
         ]
       }
     },
@@ -982,7 +994,9 @@
       ],
       "get": {
         "summary": "Poliçe numarasına bağlı hasar dosyaları alma",
-        "tags": [],
+        "tags": [
+          "Hasar Dosyası İşlemleri"
+        ],
         "responses": {
           "200": {
             "description": "OK"
