@@ -995,7 +995,7 @@
     "securitySchemes": {
       "JWT Bearer Authorization": {
         "type": "http",
-        "scheme": "Bearer"
+        "scheme": "bearer"
       }
     }
   }
