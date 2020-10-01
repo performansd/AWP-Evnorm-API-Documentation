@@ -668,7 +668,6 @@
         },
         "required": [
           "success",
-          "message",
           "statusCode"
         ]
       },
