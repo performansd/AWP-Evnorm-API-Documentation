@@ -9,10 +9,6 @@
     {
       "name": "Hasar Dosyası İşlemleri",
       "description": "Hasar dosyaları ile iglili işlemleri içermektedir"
-    },
-    {
-      "name": "Genel Bakış",
-      "description": " "
     }
   ],
   "info": {
@@ -23,10 +19,7 @@
       "name": "Performans ",
       "url": "http://www.performans.com"
     },
-    "description": "Evnorm Konut Hasar Yönetim Sistemi API kulalnım kılavuzu",
-            "tags": [
-          "Genel Bakış"
-        ]
+    "description": "Evnorm Konut Hasar Yönetim Sistemi API kulalnım kılavuzu"
   },
   "servers": [
     {
