@@ -447,6 +447,322 @@
         ]
       }
     },
+    "/df/create-temp": {
+      "post": {
+        "summary": "Ön Kayıt Statüsünde Hasar Dosyası Oluşturma",
+        "operationId": "post-df-create-temp",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResult"
+                },
+                "examples": {
+                  "Örnek": {
+                    "value": {
+                      "success": true,
+                      "statusCode": 200
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "description": "Ön Kayıt statüsünde hasar dosyası oluşturmak için kullanılır. ",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "description": "",
+                "type": "object",
+                "properties": {
+                  "dosyaNo": {
+                    "type": "string",
+                    "example": "2020120134375",
+                    "maxLength": 50,
+                    "description": "Hasar dosyası numarası"
+                  },
+                  "policeNo": {
+                    "type": "string",
+                    "example": "200200025120580",
+                    "maxLength": 50,
+                    "description": "Poliçe No"
+                  },
+                  "urunAdi": {
+                    "type": "string",
+                    "example": "200200025120580",
+                    "maxLength": 50,
+                    "description": "Ürün Adı - Poliçe Tipi ve Poliçe Grubu verilemediği durularda Evnorm üzerinde ürün adı eşleştirmesi var ise ürün ilgili ürün adı gönderilmelidir. Ürün adından PoliçeTipi ve Poliçe grubu alınır."
+                  },
+                  "policeTipi": {
+                    "type": "integer",
+                    "description": "Poliçe tipi kodudur. Sigorta şirketine göre değişiklik gösterebilir. ",
+                    "format": "int32",
+                    "example": 33
+                  },
+                  "policeGrubu": {
+                    "type": "integer",
+                    "description": "Poliçe Grubu\n\n1 : Sivil\n2 : Ticari\n3 : Sınai",
+                    "enum": [
+                      1,
+                      2,
+                      3
+                    ],
+                    "format": "int32",
+                    "example": 1,
+                    "minimum": 1,
+                    "maximum": 3
+                  },
+                  "policeBaslangicTarihi": {
+                    "type": "string",
+                    "description": "Poliçe Başlangıç Tarihi: 'yyyy-MM-dd' şeklinde ISODATE formatında olmalıdır. Poliçe başlangıç tarihi bugünden sonra olamaz\n\n",
+                    "format": "date",
+                    "example": "2020-06-16"
+                  },
+                  "policeBitisTarihi": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "2021-06-16",
+                    "description": "Poliçe Bitiş Tarihi: 'yyyy-MM-dd' şeklinde ISODATE formatında olmalıdır. Poliçe bitiş tarihi poliçe başlangıç tarihinden sonra olmalıdır"
+                  },
+                  "sigortaliTipi": {
+                    "type": "integer",
+                    "description": "Sigortali Tipi: Şahıs: 1, Tüzel: 2 olabilir.",
+                    "format": "int32",
+                    "example": 2,
+                    "minimum": 1,
+                    "maximum": 2,
+                    "enum": [
+                      1,
+                      2
+                    ]
+                  },
+                  "sigortaliYetkiliAdiSoyadi": {
+                    "type": "string",
+                    "description": "Sigortalı tipi \"şahıs\" olan poliçelerde Sigortalı Adı, \"tüzel\" olan poliçelerde ise firma adına yetkili kişinin adı soyadıdır.",
+                    "example": "Mehmet Yıldırım",
+                    "maxLength": 50
+                  },
+                  "sigortaliTcKimlikNo": {
+                    "type": "string",
+                    "description": "Sigortalı tipi \"şahıs\" olan poliçelerde girilmesi zorunlu olup sigortalının Türk vatandaşları için T.C. Kimlik Numarası, yabancı uyruklular için ise pasaport numarası belirtilmelidir.",
+                    "example": "55544466677",
+                    "maxLength": 20
+                  },
+                  "sigortaliFirmaUnvani": {
+                    "type": "string",
+                    "example": "AGA Servis Hizmetleri A.Ş.",
+                    "maxLength": 255,
+                    "description": "Sigortalı tipi \"tüzel\" olan poliçelerde girilmesi zorunlu olup poliçe sahibi firmanın adı belirtilmelidir."
+                  },
+                  "sigortaliVergiDairesi": {
+                    "type": "string",
+                    "example": "MECİDİYEKÖY",
+                    "maxLength": 20,
+                    "description": "Sigortalı tipi \"tüzel\" olan poliçelerde girilmesi zorunlu olup poliçe sahibi firmanın vergi dairesi belirtilmelidir"
+                  },
+                  "sigortaliVergiNo": {
+                    "type": "string",
+                    "description": "Sigortalı tipi \"tüzel\" olan poliçelerde girilmesi zorunlu olup poliçe sahibi firmanın vergi numarası belirtilmelidir",
+                    "example": "7280281299",
+                    "maxLength": 20
+                  },
+                  "sigortaliKiracimi": {
+                    "type": "boolean",
+                    "example": true,
+                    "description": "Sigortalı kiracı ise true mülk sahibi ise false gönderilir."
+                  },
+                  "sigortaliGsm": {
+                    "type": "string",
+                    "description": "Sigortalıya erişilebilmesi ve sistem tarafından bildirimlerin sms olarak gönderileceği cep telefonu numarasıdır. Telefon numarası 5556667788 formatında başında sıfır olmadan, 10 haneli ve sadece rakamlardan oluşmalıdır. Farklı formatlarda girilmesi halinde SMS bildirimleri sigortalıya ulaşmayabilir.",
+                    "example": "5556667788",
+                    "maxLength": 20
+                  },
+                  "sigortaliTel1": {
+                    "type": "string",
+                    "description": "Sigortalıya ait ev iş ya da diğer telefon numarası. Telefon numarası 2126667788 formatında başında sıfır olmadan, 10 haneli ve sadece rakamlardan oluşmalıdır.",
+                    "example": "2122919816",
+                    "maxLength": 20
+                  },
+                  "sigortaliTel2": {
+                    "type": "string",
+                    "description": "Sigortalıya ait ev iş ya da diğer telefon numarası. Telefon numarası 2126667788 formatında başında sıfır olmadan, 10 haneli ve sadece rakamlardan oluşmalıdır.",
+                    "example": "2122485078",
+                    "maxLength": 20
+                  },
+                  "acenteUnvani": {
+                    "type": "string",
+                    "description": "Poliçeyi yapan sigorta acentesi unvanı",
+                    "example": "ALP-ER SİGORTA ARACILIK HİZ. LTD. ŞTİ.",
+                    "maxLength": 255
+                  },
+                  "acenteYetklisi": {
+                    "type": "string",
+                    "description": "Poliçeyi yapan sigorta acentesi yetkilisi adı soyadı",
+                    "example": "Taner Koca",
+                    "maxLength": 100
+                  },
+                  "acenteTel": {
+                    "type": "string",
+                    "example": "8505320548",
+                    "maxLength": 100,
+                    "description": "Poliçeyi yapan sigorta acentesi rtibat telefon numarası. "
+                  },
+                  "hasarTarihi": {
+                    "type": "string",
+                    "description": "Hasarın oluştuğu tarihidir. 'yyyy-MM-dd' şeklinde ISO DATE formatında olmalıdır",
+                    "format": "date",
+                    "example": "2020-06-05"
+                  },
+                  "hasarIhbarTarihi": {
+                    "type": "string",
+                    "description": "Hasarın sigortalı tarafından bildirildiği tarihitir.  'yyyy-MM-dd' şeklinde ISO DATE formatında olmalıdır",
+                    "format": "date",
+                    "example": "2020-06-08"
+                  },
+                  "binaTipi": {
+                    "type": "integer",
+                    "description": "Hasarın meydana geldiği bina tipi.\n\n1: Betonarme,\n2: Tam kagir,\n3: Yarım kagir,\n4: Ahşap,\n5: Çelik,\n6: Diğer",
+                    "enum": [
+                      1,
+                      2,
+                      3,
+                      4,
+                      5,
+                      6
+                    ],
+                    "example": 1,
+                    "minimum": 1,
+                    "maximum": 6
+                  },
+                  "hasarNedeni": {
+                    "type": "integer",
+                    "description": "Hasarın oluşma nedeni. Aşağıdaki değerlerden birisini alabilir\n\n19 : Cam Kırılması / Cam Kırılması,\n20 : Cam Kırılması / Dolu,\n21 : Cam Kırılması / Hareketli Cam,\n22 : Cam Kırılması / Sabit Cam,\n23 : Dahili Su / Açık Bırakılan Musluk,\n24 : Dahili Su / Akvaryum Su Sızması,\n25 : Dahili Su / Baca Açıkları,\n26 : Dahili Su / Drenaj,\n27 : Dahili Su / Geri Tepme,\n28 : Dahili Su / Isı Farklılığı,\n29 : Dahili Su / İç İzolasyon Eksikliği,\n30 : Dahili Su / İzolasyon Hatası,\n31 : Dahili Su / Komşudan Sızıntı,\n32 : Dahili Su / Tesisat Açma/Kapama,\n33 : Dahili Su / Tesisat Sızıntısı,\n34 : Dahili Su / Yağmur,\n35 : Duman / Duman,\n36 : Fırtına / Fırtına,\n37 : Hırsızlık / Ademi Teslim,\n38 : Hırsızlık / Akvaryum Su Sızması,\n39 : Hırsızlık / Aşırma,\n40 : Hırsızlık / Bina Sabit Kıymet Hırsızlık,\n41 : Hırsızlık / Emniyeti Suistimal,\n42 : Hırsızlık / Gasp, Kapkaç,\n43 : Hırsızlık / Hırsızlığa Teşebbüs,\n44 : Hırsızlık / Hırsızlık,\n45 : Hırsızlık / Hırsızlık 3. Şahıs Emtea,\n46 : Hırsızlık / Hırsızlık, Çalınma,\n47 : Hırsızlık / Kısmi Çalınma,\n48 : Hırsızlık / Tamamen Çalınma,\n49 : İnfilak / 3.Şahsa Verilen Zarar,\n50 : İnfilak / Akvaryum Su Sızması,\n51 : İnfilak / Doğalgaz Sıkışması,\n52 : İnfilak / Fiziki İnfilak,\n53 : İnfilak / Kazan Patlaması,\n54 : İnfilak / Televizyon Patlaması,\n55 : İnfilak / Tüp Patlaması,\n56 : Kar Ağırlığı / Akvaryum Su Sızması,\n57 : Kar Ağırlığı / Kar Ağırlığı,\n58 : Sel Su Baskını / Aşırı Yağış,\n59 : Sel Su Baskını / Deniz Kabarması,\n60 : Sel Su Baskını / Dere Taşması,\n61 : Sel Su Baskını / Geri Tepme,\n62 : Sel Su Baskını / Sel Su Baskını,\n63 : Sel Su Baskını / Seylap,\n64 : Sel Su Baskını / Yağmur,\n65 : Sel Su Baskını / Yer Altı Suyu,\n66 : Terör / Depo,\n67 : Terör / Gemi,\n68 : Terör / Kamyon,\n69 : Terör / Terör,\n70 : Terör / Treyler,\n71 : Terör / Uçak,\n72 : Terör / Vagon,\n73 : Yangın / Akvaryum Su Sızması,\n74 : Yangın / Ateş Sıçraması,\n75 : Yangın / Elektrik Kontağı,\n76 : Yangın / Kaynak Sonucu,\n77 : Yangın / Makina Yangın,\n78 : Yangın / Yangın",
+                    "format": "int32",
+                    "example": 19,
+                    "minimum": 19,
+                    "maximum": 78
+                  },
+                  "hasarTanimi": {
+                    "type": "string",
+                    "description": "Hasarın tanımı belirtilmelidir.",
+                    "example": "Banyo duvarında su sızıntısı var",
+                    "maxLength": 4000
+                  },
+                  "hasarAdresiIl": {
+                    "type": "string",
+                    "description": "Hasarın oluştuğu adres İL",
+                    "example": "İSTANBUL",
+                    "maxLength": 50
+                  },
+                  "hasarAdresiIlce": {
+                    "type": "string",
+                    "description": "Hasarın oluştuğu adres İLÇE",
+                    "example": "ŞİŞLİ",
+                    "maxLength": 50
+                  },
+                  "hasarAdresiSemt": {
+                    "type": "string",
+                    "description": "Hasarın oluştuğu adres SEMT, bilinmiyor ise ilçe ile aynı değer gönderilebilir",
+                    "example": "MECİDİYEKÖY",
+                    "maxLength": 50
+                  },
+                  "hasarAdresiMahalle": {
+                    "type": "string",
+                    "example": "KUŞTEPE MAH.",
+                    "maxLength": 50,
+                    "description": "Hasarın oluştuğu adres MAHALLE"
+                  },
+                  "hasarAdresiSokak": {
+                    "type": "string",
+                    "example": "Mehmetçik Cd. No:34",
+                    "maxLength": 255,
+                    "description": "Hasarın oluştuğu adres CAdde, Sokak, bina numarası kat site adı vb."
+                  },
+                  "irtibatKisiAdSoyad": {
+                    "type": "string",
+                    "description": "Hasar dosyası ile iglili irtibat kurulacak kişinin adı soyadı. Sigortalı ile aynı olabilir.",
+                    "example": "Mehmet Yıldırım",
+                    "maxLength": 50
+                  },
+                  "irtibatKisiGsm": {
+                    "type": "string",
+                    "description": "Hasar dosyası ile iglili irtibat kurulacak kişinin cep telefonu numarası. Sigortalı ile aynı olabilir. Telefon numarası 5556667788 formatında başında sıfır olmadan, 10 haneli ve sadece rakamlardan oluşmalıdır. Farklı bir formatta gönderilmesi durumunda sistemden gönderilen SMS bildirimleri ulaşmayabilir.",
+                    "example": "5557778899",
+                    "maxLength": 20
+                  },
+                  "irtibatKisiTel1": {
+                    "type": "string",
+                    "description": "Hasar dosyası ile iglili irtibat kurulacak kişiye ait ev iş ya da diğer telefon numarası. Telefon numarası 2126667788 formatında başında sıfır olmadan, 10 haneli ve sadece rakamlardan oluşmalıdır.",
+                    "maxLength": 20,
+                    "example": "2122919816"
+                  },
+                  "irtibatKisiTel2": {
+                    "type": "string",
+                    "maxLength": 20,
+                    "description": "Hasar dosyası ile iglili irtibat kurulacak kişiye ait ev iş ya da diğer telefon numarası. Telefon numarası 2126667788 formatında başında sıfır olmadan, 10 haneli ve sadece rakamlardan oluşmalıdır.",
+                    "example": "2122485078"
+                  }
+                },
+                "required": [
+                  "dosyaNo",
+                  "policeNo",
+                  "policeBaslangicTarihi",
+                  "policeBitisTarihi",
+                  "sigortaliTipi",
+                  "sigortaliYetkiliAdiSoyadi",
+                  "sigortaliKiracimi",
+                  "sigortaliGsm",
+                  "hasarTarihi",
+                  "hasarIhbarTarihi",
+                  "binaTipi",
+                  "hasarNedeni",
+                  "hasarTanimi"
+                ]
+              },
+              "examples": {
+                "Örnek": {
+                  "value": {
+                    "policeNo": "202011101311",
+                    "dosyaNo": "202011101355",
+                    "urunAdi": "Klasik Yangın / Sivil",
+                    "policeBaslangicTarihi": "2020-04-12",
+                    "policeBitisTarihi": "2021-04-12",
+                    "sigortaliTipi": 2,
+                    "sigortaliYetkiliAdiSoyadi": "Mehmet Yıldırım",
+                    "sigortaliTcKimlikNo": "55544466677",
+                    "sigortaliFirmaUnvani": "AGA Servis Hizmetleri A.Ş.",
+                    "sigortaliVergiDairesi": "MECİDİYEKÖY",
+                    "sigortaliVergiNo": "7280281299",
+                    "sigortaliKiracimi": true,
+                    "sigortaliGsm": "5556667788",
+                    "sigortaliTel1": "2122919816",
+                    "sigortaliTel2": "2122485078",
+                    "hasarTarihi": "2020-06-05",
+                    "hasarIhbarTarihi": "2020-06-08",
+                    "binaTipi": 1,
+                    "hasarNedeni": 19,
+                    "hasarTanimi": "Banyo duvarında su sızıntısı var",
+                    "hasarAdresiIl": "İSTANBUL",
+                    "hasarAdresiIlce": "ŞİŞLİ",
+                    "hasarAdresiSemt": "MECİDİYEKÖY",
+                    "hasarAdresiMahalle": "KUŞTEPE MAH.",
+                    "hasarAdresiSokak": "Mehmetçik Cd. No:34"
+                  }
+                }
+              }
+            }
+          },
+          "description": ""
+        },
+        "tags": [
+          "Hasar Dosyası İşlemleri"
+        ]
+      }
+    },
     "/df/create-update": {
       "post": {
         "summary": "Hasar Dosyası Oluşturma/Güncelleme",
@@ -616,6 +932,7 @@
                 "examples": {
                   "Örnek": {
                     "value": {
+                      "statusCode": 500,
                       "success": false,
                       "message": "Belirtilen Id ile kayıtlı bir hasar dosyası bulunamadı."
                     }
@@ -643,7 +960,7 @@
                   "rating": {
                     "type": "integer",
                     "description": "Değerlendirme puanı",
-                    "example": "5"
+                    "example": 5
                   }
                 },
                 "required": [
@@ -714,6 +1031,7 @@
                 "examples": {
                   "Örnek": {
                     "value": {
+                      "statusCode": 500,
                       "success": false,
                       "message": "Belirtilen Id ile kayıtlı bir hasar dosyası bulunamadı."
                     }
@@ -751,7 +1069,10 @@
               },
               "examples": {
                 "example-1": {
-                  "value": {}
+                  "value": {
+                    "id": "3c5c0647-7ada-411a-b3e1-0202077e4625",
+                    "isCompleted": true
+                  }
                 }
               }
             }
@@ -930,12 +1251,12 @@
                   "date": {
                     "type": "string",
                     "description": "Randevu tarihi ve saati 'yyyy-MM-dd HH:mm' şeklinde ISO Date formatında olmalıdır",
-                    "example": "2020-09-30 10:30",
+                    "example": "2020-09-30T10:30:00.0000000Z",
                     "format": "date-time"
                   },
                   "endTime": {
                     "type": "string",
-                    "example": "10:30",
+                    "example": "10:30:00",
                     "format": "time",
                     "description": "Randevu bitiş saati 'HH:mm' şeklinde TimeSpan formatında olmalıdır"
                   },
@@ -962,8 +1283,8 @@
                 "Örnek": {
                   "value": {
                     "id": "74ee726a-0f2a-4733-8d28-e90710287c10",
-                    "date": "2020-09-01 11:30:00",
-                    "endTime": "11:40",
+                    "date": "2020-09-01T11:30:00.0000000Z",
+                    "endTime": "11:40:00",
                     "type": 2
                   }
                 }
