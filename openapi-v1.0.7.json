@@ -1,4 +1,3 @@
-
 {
   "openapi": "3.0.0",
   "tags": [
@@ -2419,6 +2418,108 @@
         },
         "operationId": "get-df-get-with-policy-number-policyNumber",
         "description": "Belirtilen poliçe numarasın ile Evnorm sisteminde kayıtlı tüm hasar dosyalarını getirir. Sonuç setinde birden fazla hasar dosyası olabilir.",
+        "security": [
+          {
+            "JWT Bearer Authorization": []
+          }
+        ]
+      }
+    },
+    "/appointment": {
+      "post": {
+        "summary": "Yeni Randevu Talebi",
+        "operationId": "post-appointment",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResult"
+                },
+                "examples": {
+                  "Örnek 1": {
+                    "value": {
+                      "success": true,
+                      "statusCode": 200
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "description": "",
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Evnorm Hasar Dosyası Id (GUID tipinde)"
+                  },
+                  "startDate": {
+                    "type": "string",
+                    "minLength": 1,
+                    "format": "date-time",
+                    "example": "2021-03-19",
+                    "description": "Talep edilen randevu tarihi"
+                  },
+                  "startTime": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Talep edilen randevu saati (HH:mm) formatında olmalıdır."
+                  },
+                  "endTime": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Talep edilen randevu bitiş saati (HH:mm) formatında olmalıdır."
+                  },
+                  "appointmentType": {
+                    "type": "number",
+                    "description": "Randevu tipi\n1: Fizibilite Randevusu\n2: Onarım randevusu",
+                    "enum": [
+                      1,
+                      2
+                    ]
+                  }
+                },
+                "required": [
+                  "id",
+                  "startDate",
+                  "startTime",
+                  "endTime",
+                  "appointmentType"
+                ]
+              },
+              "examples": {
+                "Fizibilite randevusu talebi": {
+                  "value": {
+                    "id": "007b5c6f-5470-4648-834e-9f60a0799ca5",
+                    "startDate": "2021-03-19",
+                    "startTime": "10:30",
+                    "endTime": "11:00",
+                    "appointmentType": 1
+                  }
+                },
+                "Onarım randevusu talebi": {
+                  "value": {
+                    "id": "007b5c6f-5470-4648-834e-9f60a0799ca5",
+                    "startDate": "2021-03-22",
+                    "startTime": "10:30",
+                    "endTime": "11:00",
+                    "appointmentType": 2
+                  }
+                }
+              }
+            }
+          },
+          "description": ""
+        },
+        "description": "Evnorm üzerindeki bir hasar dosyası için randevu talep etmek için kullanılan metottur",
         "security": [
           {
             "JWT Bearer Authorization": []
