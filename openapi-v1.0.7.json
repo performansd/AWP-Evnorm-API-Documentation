@@ -2524,6 +2524,9 @@
           {
             "JWT Bearer Authorization": []
           }
+        ],
+        "tags": [
+          "Hasar Dosyası İşlemleri"
         ]
       }
     }
