@@ -2738,8 +2738,10 @@
         }
       ],
       "get": {
-        "summary": "Your GET endpoint",
-        "tags": [],
+        "summary": "Randevu Talebi İptal Etme",
+        "tags": [
+          "Randevu İşlemleri"
+        ],
         "responses": {
           "200": {
             "description": "OK",
