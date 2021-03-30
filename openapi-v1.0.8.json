@@ -8,11 +8,15 @@
     {
       "name": "Hasar Dosyası İşlemleri",
       "description": "Hasar dosyaları ile iglili işlemleri içermektedir"
+    },
+    {
+      "name": "Randevu İşlemleri",
+      "description": "Hasar dosyasına bağlı randevu talepleri ile ilgili işlemleri içerir"
     }
   ],
   "info": {
     "title": "AWP Evnorm API",
-    "version": "1.0.7",
+    "version": "1.0.8",
     "contact": {
       "email": "dev@performans.com",
       "name": "Performans ",
@@ -22,7 +26,7 @@
   },
   "servers": [
     {
-      "url": "https://api.evnorm.com/api"
+      "url": "https://api.evnorm.com/api/v1"
     }
   ],
   "paths": {
@@ -1189,7 +1193,7 @@
     },
     "/df/set-appointment-date": {
       "post": {
-        "summary": "Fizibilite ya da Onarım Randevu Tarihi Güncelleme",
+        "summary": "Hasar Dosyası Fizibilite ya da Onarım Randevu Tarihi Güncelleme",
         "operationId": "post-df-set-appointment-date",
         "responses": {
           "200": {
@@ -2526,7 +2530,249 @@
           }
         ],
         "tags": [
-          "Hasar Dosyası İşlemleri"
+          "Randevu İşlemleri"
+        ]
+      }
+    },
+    "/appointment/list/{id}": {
+      "get": {
+        "summary": "Hasar dosyasına bağlı ranedevu talepleri listesi alma",
+        "tags": [
+          "Randevu İşlemleri"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "",
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "uniqueItems": true,
+                      "minItems": 1,
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "statusId": {
+                            "type": "number",
+                            "description": "Randevu talep durumu\n\n12010: Onay Bekliyor\n12011: Onaylandı\n12012: Reddedildi\n12013: Silindi\n13014: İptal Edildi"
+                          },
+                          "statusText": {
+                            "type": "string",
+                            "minLength": 1,
+                            "description": "Talep durumu açıklaması"
+                          },
+                          "appointmentTypeId": {
+                            "type": "number",
+                            "description": "Talep türü\n\n12021: Fizibilite randevusu talebi\n12022: Onarım randevusu talebi"
+                          },
+                          "appointmentTypeText": {
+                            "type": "string",
+                            "minLength": 1,
+                            "description": "Talep türü açıklaması"
+                          },
+                          "startDate": {
+                            "type": "string",
+                            "minLength": 1,
+                            "description": "Talap edilen randevu başlangıç tarihi/saati",
+                            "format": "date-time"
+                          },
+                          "endTime": {
+                            "type": "string",
+                            "minLength": 1,
+                            "description": "Talep edilen randevu bitiş saati",
+                            "format": "time"
+                          },
+                          "damageFileId": {
+                            "type": "string",
+                            "minLength": 1,
+                            "description": "İlgili hasar dosyası Evnorm Id'si (GUID tipinde)",
+                            "format": "uuid"
+                          },
+                          "policyNumber": {
+                            "type": "string",
+                            "minLength": 1,
+                            "description": "Poliçe numarası"
+                          },
+                          "createdOn": {
+                            "type": "string",
+                            "minLength": 1,
+                            "description": "Talep tarihi"
+                          },
+                          "createdBy": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "modifiedOn": {
+                            "type": "string",
+                            "minLength": 1,
+                            "description": "Talep güncelleme tarihi"
+                          },
+                          "modifiedBy": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "id": {
+                            "type": "string",
+                            "minLength": 1,
+                            "description": "Talep Id",
+                            "format": "uuid"
+                          }
+                        },
+                        "required": [
+                          "statusId",
+                          "statusText",
+                          "appointmentTypeId",
+                          "appointmentTypeText",
+                          "startDate",
+                          "endTime",
+                          "damageFileId",
+                          "policyNumber",
+                          "createdOn",
+                          "createdBy",
+                          "modifiedOn",
+                          "modifiedBy",
+                          "id"
+                        ]
+                      }
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "description": ""
+                    },
+                    "type": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "statusCode": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "success",
+                    "type",
+                    "statusCode"
+                  ]
+                },
+                "examples": {
+                  "Örnek Sonuç": {
+                    "value": {
+                      "data": [
+                        {
+                          "statusId": 12014,
+                          "statusText": "İptal Edilmiş",
+                          "appointmentTypeId": 12021,
+                          "appointmentTypeText": "Fizibilite Randevusu",
+                          "startDate": "2021-03-30T14:30:00",
+                          "endTime": "15:00:00",
+                          "damageFileId": "1583e6e7-09f2-4ae5-b8ce-09d69e1264cd",
+                          "policyNumber": "TEST-200200025120580-1",
+                          "createdOn": "2021-03-30T11:42:52.6645419",
+                          "createdBy": "484ed074-bdb7-460b-b0b1-ce93438a08a8",
+                          "modifiedOn": "2021-03-30T11:42:52.6645419",
+                          "modifiedBy": "484ed074-bdb7-460b-b0b1-ce93438a08a8",
+                          "id": "6b39f4b5-3655-4032-8927-8d34aa24ea99"
+                        },
+                        {
+                          "statusId": 12014,
+                          "statusText": "İptal Edilmiş",
+                          "appointmentTypeId": 12021,
+                          "appointmentTypeText": "Fizibilite Randevusu",
+                          "startDate": "2021-03-30T12:30:00",
+                          "endTime": "13:00:00",
+                          "damageFileId": "1583e6e7-09f2-4ae5-b8ce-09d69e1264cd",
+                          "policyNumber": "TEST-200200025120580-1",
+                          "createdOn": "2021-03-30T10:43:47.3337688",
+                          "createdBy": "484ed074-bdb7-460b-b0b1-ce93438a08a8",
+                          "modifiedOn": "2021-03-30T10:43:47.3337688",
+                          "modifiedBy": "484ed074-bdb7-460b-b0b1-ce93438a08a8",
+                          "id": "5f4fb922-fa2c-4be0-ae64-59a0ea1b9f75"
+                        }
+                      ],
+                      "success": true,
+                      "type": "success",
+                      "statusCode": 200
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-appointment-list",
+        "description": "Bir hasar dosyasına ait tüm randevu talepleri listesini almak için kullanılan metottur",
+        "security": [
+          {
+            "JWT Bearer Authorization": []
+          }
+        ]
+      },
+      "parameters": [
+        {
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "GUID tipinde hasar dosyasına ait Evnorm id'si"
+        }
+      ]
+    },
+    "/appointment/cancel/{id}": {
+      "parameters": [
+        {
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "İptale edilecek randevu talebi Id'si"
+        }
+      ],
+      "get": {
+        "summary": "Your GET endpoint",
+        "tags": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResult"
+                },
+                "examples": {
+                  "Başarılı işlem sonucu": {
+                    "value": {
+                      "success": true,
+                      "statusCode": 200
+                    }
+                  },
+                  "Hatalı İşlem Sonucu": {
+                    "value": {
+                      "success": false,
+                      "message": "İşlem yapılabilecek randevu talebi bulunamadı. İlgili talep onaylanmış ya da reddedilmiş olabilir.",
+                      "statusCode": 422
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-appointment-cancel-id",
+        "description": "Önceden verilmiş ve henüz onay bekleyen bir randevu talebini iptal etmek için kullanılır. Id parametresi /appintmen/list api metodundan alınan listedeki randevu talebine (AppointmentRequest) ait id değeridir. Hasar dosyası id değeri değildir!",
+        "security": [
+          {
+            "JWT Bearer Authorization": []
+          }
         ]
       }
     }
