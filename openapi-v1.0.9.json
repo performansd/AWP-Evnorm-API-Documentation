@@ -1331,7 +1331,10 @@
                   "type": "object",
                   "properties": {
                     "data": {
-                      "$ref": "#/components/schemas/DetayliHasarDosyasi"
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/DetayliHasarDosyasi"
+                      }
                     },
                     "success": {
                       "type": "boolean"
@@ -1341,7 +1344,6 @@
                     }
                   },
                   "required": [
-                    "data",
                     "success",
                     "statusCode"
                   ]
