@@ -1328,7 +1328,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Detayl'HasarDosyas'"
+                  "$ref": "#/components/schemas/DetayliHasarDosyasi"
                 }
               }
             }
