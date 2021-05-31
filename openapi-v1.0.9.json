@@ -1328,7 +1328,23 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/DetayliHasarDosyasi"
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/DetayliHasarDosyasi"
+                    },
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "statusCode": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "success",
+                    "statusCode"
+                  ]
                 }
               }
             }
