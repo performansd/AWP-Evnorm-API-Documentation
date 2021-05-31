@@ -1324,7 +1324,14 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Detayl'HasarDosyas'"
+                }
+              }
+            }
           },
           "401": {
             "description": "Created"
@@ -2426,7 +2433,8 @@
           {
             "JWT Bearer Authorization": []
           }
-        ]
+        ],
+        "parameters": []
       }
     },
     "/appointment": {
@@ -3166,6 +3174,9 @@
             "maxLength": 20,
             "description": "Hasar dosyası ile iglili irtibat kurulacak kişiye ait ev iş ya da diğer telefon numarası. Telefon numarası 2126667788 formatında başında sıfır olmadan, 10 haneli ve sadece rakamlardan oluşmalıdır.",
             "example": "2122485078"
+          },
+          "": {
+            "type": "string"
           }
         },
         "required": [
@@ -3191,6 +3202,449 @@
           "hasarAdresiSokak",
           "irtibatKisiAdSoyad",
           "irtibatKisiGsm"
+        ]
+      },
+      "SupplierUser": {
+        "description": "Bir hasar dosyasına atanmış fizibilite ya da onarım uzmannı bilgileri",
+        "type": "object",
+        "x-examples": {
+          "Örnek 1": {
+            "id": "b4825258-8416-48aa-9191-1c1b3fa7c8b4",
+            "comapny": "Performans İnşaat Taahhüt A.Ş.",
+            "fulllName": "Performans Test Tedarikçi",
+            "mobilePhone": "05337273639",
+            "phone1": "02122919816",
+            "phone2": null,
+            "email": "evnorm.tedarikci@performans.com",
+            "value": {
+              "id": "a4825258-8416-48aa-9191-1d1b3fa7c8b4",
+              "company": "Performans İnşaat Taahhüt A.Ş.",
+              "fulllName": "Performans Test Tedarikçi",
+              "mobilePhone": "05559998877",
+              "phone1": "08505320548",
+              "phone2": null,
+              "email": "evnorm.tedarikci@performans.com"
+            }
+          }
+        },
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Evnorm User Id"
+          },
+          "company": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Fizibilite/Onarım Uzmanının bağlı olduğu firma adı"
+          },
+          "fulllName": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Fizibilite/Onarım Uzmanının Adı soyadı"
+          },
+          "mobilePhone": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Fizibilite/Onarım Uzmanı Cep Telefonu "
+          },
+          "phone1": {
+            "type": "string",
+            "description": "Fizibilite/Onarım Uzmanı sabit telefon"
+          },
+          "phone2": {
+            "description": "Fizibilite/Onarım Uzmanı sabit telefon"
+          },
+          "email": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Fizibilite/Onarım Uzmanı e-posta adresi"
+          }
+        }
+      },
+      "DetayliHasarDosyasi": {
+        "description": "",
+        "type": "object",
+        "x-examples": {
+          "example-1": {
+            "sirket": "d8812541-34e7-4e2d-aefa-0d0e9d9324a3",
+            "eksper": "e7268a0d-1fc7-44a5-84ad-dab0f4be0d5e",
+            "matDosyaNo": "2020-10-01-015246-365",
+            "dosyaNo": "AZXTEST2020100101",
+            "policeTipi": 14,
+            "policeGrubu": 1,
+            "policeNo": "AZXTEST2020100101",
+            "policeBaslangicTarihi": "2020-03-02T00:00:00",
+            "policeBitisTarihi": "2021-03-02T00:00:00",
+            "musteriOnceligi": 1,
+            "sigortaliTipi": 1,
+            "sigortaliFirmaUnvani": null,
+            "sigortaliVergiDairesi": null,
+            "sigortaliVergiNo": null,
+            "sigortaliYetkiliAdiSoyadi": "TEST SİGORTALI",
+            "sigortaliTcKimlikNo": "11111111111",
+            "sigortaliKiracimi": true,
+            "sigortaliGsm": "0 (533) 727 36 39",
+            "sigortaliTel1": null,
+            "sigortaliTel2": null,
+            "acente": "de1c41f2-6eb3-414a-a331-22b447d9e470",
+            "acenteUnvani": null,
+            "acenteYetklisi": null,
+            "acenteTel": null,
+            "hasarTarihi": "2020-09-29T00:00:00",
+            "hasarIhbarTarihi": "2020-09-30T00:00:00",
+            "binaTipi": 1,
+            "hasarNedeni": 11,
+            "hasarTanimi": "TEST",
+            "hasarAdresiIl": "İSTANBUL",
+            "hasarAdresiIlce": "AVCILAR",
+            "hasarAdresiSemt": "AMBARLI",
+            "hasarAdresiMahalle": "AMBARLI MAH.",
+            "hasarAdresiSokak": "TEST",
+            "irtibatKisiAdSoyad": "TEST SİGORTALI",
+            "irtibatKisiGsm": "0 (533) 727 36 39",
+            "irtibatKisiTel1": null,
+            "irtibatKisiTel2": null,
+            "dosyaDurumu": 3,
+            "fizibiliteUzmani": "b4825258-8416-48aa-9191-1c1b3fa7c8b4",
+            "fizibiliteUzmaniBilgileri": {
+              "id": "b4825258-8416-48aa-9191-1c1b3fa7c8b4",
+              "company": "Performans İnşaat Taahhüt A.Ş.",
+              "fulllName": "Performans Test Tedarikçi",
+              "mobilePhone": "05337273639",
+              "phone1": "02122919816",
+              "phone2": null,
+              "email": "evnorm.tedarikci@performans.com"
+            },
+            "onarimUzmaniBilgileri": {
+              "id": "b4825258-8416-48aa-9191-1c1b3fa7c8b4",
+              "company": "Performans İnşaat Taahhüt A.Ş.",
+              "fulllName": "Performans Test Tedarikçi",
+              "mobilePhone": "05337273639",
+              "phone1": "02122919816",
+              "phone2": null,
+              "email": "evnorm.tedarikci@performans.com"
+            },
+            "fizibiliteRandevuTarihi": "2020-10-01T10:00:00",
+            "fizibiliteRandevuTarihiBitisSaati": "16:00",
+            "onarimUzmani": "b4825258-8416-48aa-9191-1c1b3fa7c8b4",
+            "onarimRandevuTarihi": "2020-10-01T11:30:00",
+            "onarimRandevuTarihiBitisSaati": "10:30",
+            "onarimBaslangicTarihi": "2020-10-01T12:00:00",
+            "onarimBitisTarihi": "2020-10-02T12:00:00",
+            "hasNotification": false,
+            "flagStatus": 3,
+            "flagStatusDescription": "AZXTEST2020100101<br />Onarım yapılıyor/rapor oluşturuluyor",
+            "responsible": 4,
+            "dosyaBeklemeNedeni": null,
+            "dosyaBeklemeTarihi": null,
+            "dosyaKapanmaNedeni": 0,
+            "muallakHasarToplam": 0,
+            "muallakHasarSmsCode": null,
+            "tedarikciOnarimRandevusunaGecikti": true,
+            "tedarikciFizibiliteRandevusunaGecikti": true,
+            "rating": 5,
+            "musteriOnarimTamamlandi": false,
+            "hasFeasibilitySpecialist": true,
+            "hasFeasibilityMeetingDate": true,
+            "hasRepairSpecialist": true,
+            "hasRepairDates": true,
+            "hasAffectedParties": null,
+            "affectedParties": [],
+            "appointmentRequests": null,
+            "createdOn": "2020-10-01T13:52:46.367",
+            "createdBy": "8ec5f176-da03-449c-a583-33ca31571170",
+            "modifiedOn": "2020-10-01T16:40:05.603",
+            "modifiedBy": "8ec5f176-da03-449c-a583-33ca31571170",
+            "id": "74ee726a-0f2a-4733-8d28-e90710287c10"
+          }
+        },
+        "title": "DetayliHasarDosyasi",
+        "properties": {
+          "sirket": {
+            "type": "string",
+            "minLength": 1
+          },
+          "eksper": {
+            "type": "string",
+            "minLength": 1
+          },
+          "matDosyaNo": {
+            "type": "string",
+            "minLength": 1
+          },
+          "dosyaNo": {
+            "type": "string",
+            "minLength": 1
+          },
+          "policeTipi": {
+            "type": "number"
+          },
+          "policeGrubu": {
+            "type": "number"
+          },
+          "policeNo": {
+            "type": "string",
+            "minLength": 1
+          },
+          "policeBaslangicTarihi": {
+            "type": "string",
+            "minLength": 1
+          },
+          "policeBitisTarihi": {
+            "type": "string",
+            "minLength": 1
+          },
+          "musteriOnceligi": {
+            "type": "number"
+          },
+          "sigortaliTipi": {
+            "type": "number"
+          },
+          "sigortaliFirmaUnvani": {},
+          "sigortaliVergiDairesi": {},
+          "sigortaliVergiNo": {},
+          "sigortaliYetkiliAdiSoyadi": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sigortaliTcKimlikNo": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sigortaliKiracimi": {
+            "type": "boolean"
+          },
+          "sigortaliGsm": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sigortaliTel1": {},
+          "sigortaliTel2": {},
+          "acente": {
+            "type": "string",
+            "minLength": 1
+          },
+          "acenteUnvani": {},
+          "acenteYetklisi": {},
+          "acenteTel": {},
+          "hasarTarihi": {
+            "type": "string",
+            "minLength": 1
+          },
+          "hasarIhbarTarihi": {
+            "type": "string",
+            "minLength": 1
+          },
+          "binaTipi": {
+            "type": "number"
+          },
+          "hasarNedeni": {
+            "type": "number"
+          },
+          "hasarTanimi": {
+            "type": "string",
+            "minLength": 1
+          },
+          "hasarAdresiIl": {
+            "type": "string",
+            "minLength": 1
+          },
+          "hasarAdresiIlce": {
+            "type": "string",
+            "minLength": 1
+          },
+          "hasarAdresiSemt": {
+            "type": "string",
+            "minLength": 1
+          },
+          "hasarAdresiMahalle": {
+            "type": "string",
+            "minLength": 1
+          },
+          "hasarAdresiSokak": {
+            "type": "string",
+            "minLength": 1
+          },
+          "irtibatKisiAdSoyad": {
+            "type": "string",
+            "minLength": 1
+          },
+          "irtibatKisiGsm": {
+            "type": "string",
+            "minLength": 1
+          },
+          "irtibatKisiTel1": {},
+          "irtibatKisiTel2": {},
+          "dosyaDurumu": {
+            "type": "number"
+          },
+          "fizibiliteUzmani": {
+            "type": "string",
+            "minLength": 1
+          },
+          "fizibiliteUzmaniBilgileri": {
+            "$ref": "#/components/schemas/SupplierUser"
+          },
+          "onarimUzmaniBilgileri": {
+            "$ref": "#/components/schemas/SupplierUser"
+          },
+          "fizibiliteRandevuTarihi": {
+            "type": "string",
+            "minLength": 1
+          },
+          "fizibiliteRandevuTarihiBitisSaati": {
+            "type": "string",
+            "minLength": 1
+          },
+          "onarimUzmani": {
+            "type": "string",
+            "minLength": 1
+          },
+          "onarimRandevuTarihi": {
+            "type": "string",
+            "minLength": 1
+          },
+          "onarimRandevuTarihiBitisSaati": {
+            "type": "string",
+            "minLength": 1
+          },
+          "onarimBaslangicTarihi": {
+            "type": "string",
+            "minLength": 1
+          },
+          "onarimBitisTarihi": {
+            "type": "string",
+            "minLength": 1
+          },
+          "hasNotification": {
+            "type": "boolean"
+          },
+          "flagStatus": {
+            "type": "number"
+          },
+          "flagStatusDescription": {
+            "type": "string",
+            "minLength": 1
+          },
+          "responsible": {
+            "type": "number"
+          },
+          "dosyaBeklemeNedeni": {},
+          "dosyaBeklemeTarihi": {},
+          "dosyaKapanmaNedeni": {
+            "type": "number"
+          },
+          "muallakHasarToplam": {
+            "type": "number"
+          },
+          "muallakHasarSmsCode": {},
+          "tedarikciOnarimRandevusunaGecikti": {
+            "type": "boolean"
+          },
+          "tedarikciFizibiliteRandevusunaGecikti": {
+            "type": "boolean"
+          },
+          "rating": {
+            "type": "number"
+          },
+          "musteriOnarimTamamlandi": {
+            "type": "boolean"
+          },
+          "hasFeasibilitySpecialist": {
+            "type": "boolean"
+          },
+          "hasFeasibilityMeetingDate": {
+            "type": "boolean"
+          },
+          "hasRepairSpecialist": {
+            "type": "boolean"
+          },
+          "hasRepairDates": {
+            "type": "boolean"
+          },
+          "hasAffectedParties": {},
+          "appointmentRequests": {},
+          "createdOn": {
+            "type": "string",
+            "minLength": 1
+          },
+          "createdBy": {
+            "type": "string",
+            "minLength": 1
+          },
+          "modifiedOn": {
+            "type": "string",
+            "minLength": 1
+          },
+          "modifiedBy": {
+            "type": "string",
+            "minLength": 1
+          },
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "sirket",
+          "eksper",
+          "matDosyaNo",
+          "dosyaNo",
+          "policeTipi",
+          "policeGrubu",
+          "policeNo",
+          "policeBaslangicTarihi",
+          "policeBitisTarihi",
+          "musteriOnceligi",
+          "sigortaliTipi",
+          "sigortaliYetkiliAdiSoyadi",
+          "sigortaliTcKimlikNo",
+          "sigortaliKiracimi",
+          "sigortaliGsm",
+          "acente",
+          "hasarTarihi",
+          "hasarIhbarTarihi",
+          "binaTipi",
+          "hasarNedeni",
+          "hasarTanimi",
+          "hasarAdresiIl",
+          "hasarAdresiIlce",
+          "hasarAdresiSemt",
+          "hasarAdresiMahalle",
+          "hasarAdresiSokak",
+          "irtibatKisiAdSoyad",
+          "irtibatKisiGsm",
+          "dosyaDurumu",
+          "fizibiliteUzmani",
+          "fizibiliteUzmaniBilgileri",
+          "onarimUzmaniBilgileri",
+          "fizibiliteRandevuTarihi",
+          "fizibiliteRandevuTarihiBitisSaati",
+          "onarimUzmani",
+          "onarimRandevuTarihi",
+          "onarimRandevuTarihiBitisSaati",
+          "onarimBaslangicTarihi",
+          "onarimBitisTarihi",
+          "hasNotification",
+          "flagStatus",
+          "flagStatusDescription",
+          "responsible",
+          "dosyaKapanmaNedeni",
+          "muallakHasarToplam",
+          "tedarikciOnarimRandevusunaGecikti",
+          "tedarikciFizibiliteRandevusunaGecikti",
+          "rating",
+          "musteriOnarimTamamlandi",
+          "hasFeasibilitySpecialist",
+          "hasFeasibilityMeetingDate",
+          "hasRepairSpecialist",
+          "hasRepairDates",
+          "createdOn",
+          "createdBy",
+          "modifiedOn",
+          "modifiedBy",
+          "id"
         ]
       }
     },
